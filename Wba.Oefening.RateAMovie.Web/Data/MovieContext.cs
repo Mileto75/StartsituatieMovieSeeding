@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Wba.Oefening.RateAMovie.Domain.Entities;
-using Wba.Oefening.RateAMovie.Domains.Entities;
+
 
 namespace Wba.Oefening.RateAMovie.Web.Data
 {
@@ -151,13 +151,8 @@ namespace Wba.Oefening.RateAMovie.Web.Data
                 .WithMany(movie => movie.Directors)
                 .HasForeignKey(md => md.MovieId); //overbodig want naamgeving van MovieId is al per conventie
 
-            
-            
-
-
-
             //finally, seed this db
-            //Seeder.SeedData(modelBuilder);
+            
         }
 
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Wba.Oefening.RateAMovie.Domains.Entities;
+
 
 namespace Wba.Oefening.RateAMovie.Domain.Entities
 {

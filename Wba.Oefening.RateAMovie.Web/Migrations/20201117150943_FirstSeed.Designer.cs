@@ -10,8 +10,8 @@ using Wba.Oefening.RateAMovie.Web.Data;
 namespace Wba.Oefening.RateAMovie.Web.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20200423105916_AddMovieAndActorRelation")]
-    partial class AddMovieAndActorRelation
+    [Migration("20201117150943_FirstSeed")]
+    partial class FirstSeed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace Wba.Oefening.RateAMovie.Web.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.Actor", b =>
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.Actor", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,22 +40,7 @@ namespace Wba.Oefening.RateAMovie.Web.Migrations
                     b.ToTable("Actors");
                 });
 
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.Company", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Companies");
-                });
-
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.Director", b =>
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.Director", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,13 +59,13 @@ namespace Wba.Oefening.RateAMovie.Web.Migrations
                     b.ToTable("Directors");
                 });
 
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.Movie", b =>
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.Movie", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("CompanyId");
+                    b.Property<long>("CompanyId");
 
                     b.Property<DateTime?>("ReleaseDate");
 
@@ -95,36 +80,43 @@ namespace Wba.Oefening.RateAMovie.Web.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.MovieActor", b =>
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.MovieActor", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<long>("MovieId");
 
-                    b.Property<long?>("ActorId");
+                    b.Property<long>("ActorId");
 
-                    b.Property<long?>("MovieId");
-
-                    b.HasKey("Id");
+                    b.HasKey("MovieId", "ActorId");
 
                     b.HasIndex("ActorId");
-
-                    b.HasIndex("MovieId");
 
                     b.ToTable("MovieActor");
                 });
 
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.Rating", b =>
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.MovieDirector", b =>
+                {
+                    b.Property<long>("MovieId");
+
+                    b.Property<long>("DirectorId");
+
+                    b.HasKey("MovieId", "DirectorId");
+
+                    b.HasIndex("DirectorId");
+
+                    b.ToTable("MovieDirector");
+                });
+
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.Rating", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("RatedMovieId");
+                    b.Property<long>("RatedMovieId");
 
                     b.Property<string>("Review");
 
-                    b.Property<long?>("ReviewerId");
+                    b.Property<long>("ReviewerId");
 
                     b.Property<byte>("Score");
 
@@ -137,7 +129,7 @@ namespace Wba.Oefening.RateAMovie.Web.Migrations
                     b.ToTable("Ratings");
                 });
 
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.User", b =>
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -158,33 +150,66 @@ namespace Wba.Oefening.RateAMovie.Web.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.Movie", b =>
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domains.Entities.Company", b =>
                 {
-                    b.HasOne("Wba.Oefening.RateAMovie.Web.Domain.Entities.Company", "Company")
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.Movie", b =>
+                {
+                    b.HasOne("Wba.Oefening.RateAMovie.Domains.Entities.Company", "Company")
                         .WithMany("Movies")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.MovieActor", b =>
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.MovieActor", b =>
                 {
-                    b.HasOne("Wba.Oefening.RateAMovie.Web.Domain.Entities.Actor", "Actor")
+                    b.HasOne("Wba.Oefening.RateAMovie.Domain.Entities.Actor", "Actor")
                         .WithMany("MovieAppearances")
-                        .HasForeignKey("ActorId");
+                        .HasForeignKey("ActorId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Wba.Oefening.RateAMovie.Web.Domain.Entities.Movie", "Movie")
+                    b.HasOne("Wba.Oefening.RateAMovie.Domain.Entities.Movie", "Movie")
                         .WithMany("Cast")
-                        .HasForeignKey("MovieId");
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Wba.Oefening.RateAMovie.Web.Domain.Entities.Rating", b =>
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.MovieDirector", b =>
                 {
-                    b.HasOne("Wba.Oefening.RateAMovie.Web.Domain.Entities.Movie", "RatedMovie")
-                        .WithMany("Ratings")
-                        .HasForeignKey("RatedMovieId");
+                    b.HasOne("Wba.Oefening.RateAMovie.Domain.Entities.Director", "Director")
+                        .WithMany("DirectedMovies")
+                        .HasForeignKey("DirectorId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Wba.Oefening.RateAMovie.Web.Domain.Entities.User", "Reviewer")
+                    b.HasOne("Wba.Oefening.RateAMovie.Domain.Entities.Movie", "Movie")
+                        .WithMany("Directors")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Wba.Oefening.RateAMovie.Domain.Entities.Rating", b =>
+                {
+                    b.HasOne("Wba.Oefening.RateAMovie.Domain.Entities.Movie", "RatedMovie")
+                        .WithMany("Ratings")
+                        .HasForeignKey("RatedMovieId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Wba.Oefening.RateAMovie.Domain.Entities.User", "Reviewer")
                         .WithMany("Reviews")
-                        .HasForeignKey("ReviewerId");
+                        .HasForeignKey("ReviewerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

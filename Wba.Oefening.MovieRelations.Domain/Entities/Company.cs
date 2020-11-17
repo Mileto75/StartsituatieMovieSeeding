@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Wba.Oefening.RateAMovie.Domain.Entities;
 
-namespace Wba.Oefening.RateAMovie.Domains.Entities
+namespace Wba.Oefening.RateAMovie.Domain.Entities
 {
     public class Company
     {
