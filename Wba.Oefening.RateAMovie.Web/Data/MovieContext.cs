@@ -157,7 +157,7 @@ namespace Wba.Oefening.RateAMovie.Web.Data
 
 
             //finally, seed this db
-            Seeder.SeedData(modelBuilder);
+            //Seeder.SeedData(modelBuilder);
         }
 
     }
